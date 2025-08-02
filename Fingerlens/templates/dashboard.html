@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Fingerprint Dashboard</h2>
+    <canvas id="platformChart" width="400" height="200"></canvas>
+    <script>
+        const data = {{ fingerprints|tojson }};
 
+        const platformCounts = {};
+        data.forEach(fp => {
+            if (fp.platform in platformCounts) {
+                platformCounts[fp.platform] += 1;
+            } else {
+                platformCounts[fp.platform] = 1;
+            }
+        });
+
+        const ctx = document.getElementById('platformChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(platformCounts),
+                datasets: [{
+                    label: '# of Users by Platform',
+                    data: Object.values(platformCounts),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+              
