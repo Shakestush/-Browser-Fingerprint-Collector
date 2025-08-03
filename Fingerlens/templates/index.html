@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Fingerprint Collector</title>
+</head>
+<body>
+    <h2>Collecting your fingerprint...</h2>
+    <script>
+        async function collectFingerprint() {
+            const fingerprint = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform,
+                screenResolution: `${screen.width}x${screen.height}`,
+                colorDepth: screen.colorDepth,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                plugins: Array.from(navigator.plugins).map(p => p.name)
+            };
+
+            const response = await fetch('/collect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fingerprint)
+            });
+
+            const result = await response.json();
+            console.log('Server response:', result);
+        }
+
+        collectFingerprint();
+    </script>
+</body>
+</html>
 
